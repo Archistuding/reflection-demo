@@ -11,7 +11,7 @@ namespace ReflectionDemo
     {
         static void Main(string[] args)
         {
-            var result = Generator.GetSurprise(1);
+            var result = Generator.GetSurprise(3);
 
             // Console.WriteLine(result);
 
@@ -28,15 +28,37 @@ namespace ReflectionDemo
             foreach (FieldInfo fInfo in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 Console.WriteLine(fInfo.Name + " = " + fInfo.GetValue(result));
+                Console.WriteLine(fInfo.GetValue(result).GetType().Name);
+                if (fInfo.GetValue(result).GetType().Name == "Int32" && fInfo.GetValue(result) == 0)
+                {
+                    fInfo.SetValue(result, 10);
+                }
+                Console.WriteLine(fInfo.Name + " = " + fInfo.GetValue(result));
+                if (fInfo.GetValue(result).GetType().Name=="Action")
+                {
+                    Console.WriteLine("!!!");
+                    ((Action)fInfo.GetValue(result)).Invoke();
+
+                }
             }
 
-            foreach (var m in type.GetMethods())
+            foreach (var m in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
             {
+
                 if (m.Name == "PrintPerson")
                 {
                     m.Invoke(result, null);
                 }
+                //if (m.)
+                //{
+
+                //}
+
             }
+
+
+
+
         }
     }
 }
